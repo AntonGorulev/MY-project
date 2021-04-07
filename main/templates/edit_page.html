@@ -1,0 +1,72 @@
+{% extends "index.html" %}
+
+    {% block content %}
+    <h1 class="mt-5">Админка</h1>
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  добавить
+</button>
+    {% if update %}
+    <p>Страница редактирования</p>
+    <p><a href="{% url 'edit_page' %}"> Вернутся назад</a></p>
+    <form id="update_data" method="POST">
+      {% csrf_token %}
+      {{form}}
+    <button form="update_data" type="submit" class="btn btn-primary">Обновить</button>
+    </form>
+
+
+
+    {% else %}
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add_form" method="POST">
+            {% csrf_token %}
+            {{form}}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Зактрыть</button>
+          <button form="add_form" type="submit" class="btn btn-primary">Добаваить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    <table class="table caption-top">
+        <caption>List of users</caption>
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Дата создание</th>
+            <th scope="col">Название</th>
+            <th scope="col">Редакторование</th>
+            <th scope="col">Удаление</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for el in list_material %}
+          <tr>
+            <th>{{el.id}}</th>
+            <td>{{el.create_date}}</td>
+            <td>{{el.name}}</td>
+            <td><a href="{% url 'update_page' el.id %}">Редакторование</a></td>
+            <td><a href="{% url 'delete_page' el.id %}">Удаление</a></td>
+            
+          </tr>
+          {% endfor %}
+      
+   {% endif %}
+
+{% endblock %}
+
+  
+  

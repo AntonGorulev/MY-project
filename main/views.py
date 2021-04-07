@@ -1,28 +1,62 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Material
+from django.views.generic import ListView, DetailView
+from .forms import ArticleForm
+from django.urls import reverse
 # Create your views here.
 
 
-def home(request):
 
-    list_material = Material.objects.all()
+
+class HomeListView(ListView):
+    model = Material
+    template_name = 'index.html'
+    context_object_name = 'list_material'
+
+class HomeDetailView(DetailView):
+    model = Material
+    template_name = 'detail.html'
+    context_object_name = 'get_material'
+
+
+def edit_page(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+    
+    template = 'edit_page.html'
     context ={
-        'name':'Anton',
-        'list_material':list_material
+          
+        'list_material': Material.objects.all(),
+        'form': ArticleForm()
+
     }
 
-    template ='index.html'
-
+    
     return render(request, template, context)
 
-def detail(request, id):
+def update_page(request,pk):
 
-    get_material = Material.objects.get(id=id)
+    get_article = Material.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance = get_article)
+        if form.is_valid():
+            form.save()
 
+
+    template = 'edit_page.html'
+    
     context = {
-        'get_material':get_material
+
+        'get_material': get_article,
+        'update':True,
+        'form': ArticleForm(instance = get_article),
+        
     }
-
-    template = 'detail.html'
-
     return render(request, template, context)
+
+def delete_page(request, pk):
+    get_article = Material.objects.get(pk=pk)
+    get_article.delete()
+    return redirect(reverse('edit_page'))   
