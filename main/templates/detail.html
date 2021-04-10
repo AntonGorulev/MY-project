@@ -1,13 +1,9 @@
 {% extends "index.html" %}
 
-    {% block content %}
+{% block content %}
     <h1 class="mt-5">Статья:{{get_material.name}}</h1>
-    <p><a href="/"> Вернутся назад</a></p>
+    <p><a href="/">Вернутся назад</a></p>
     <p>Дата создания: {{get_material.create_date}}</p>
     <p>Название: {{get_material.name}}</p>
     <p>Текст: {{get_material.text}}</p>
-
 {% endblock %}
-    
-    
-

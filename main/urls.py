@@ -9,4 +9,3 @@ urlpatterns = [
     path('update-page/<int:pk>', views.update_page, name='update_page'),
     path('delete-page/<int:pk>', views.delete_page, name='delete_page'),
 ]
-

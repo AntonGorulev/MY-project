@@ -3,9 +3,6 @@ from .models import Material
 from django.views.generic import ListView, DetailView
 from .forms import ArticleForm
 from django.urls import reverse
-# Create your views here.
-
-
 
 
 class HomeListView(ListView):
@@ -26,37 +23,30 @@ def edit_page(request):
             form.save()
     
     template = 'edit_page.html'
-    context ={
-          
+    context = {
         'list_material': Material.objects.all(),
-        'form': ArticleForm()
-
+        'form': ArticleForm(),
     }
 
-    
     return render(request, template, context)
 
 def update_page(request,pk):
-
     get_article = Material.objects.get(pk=pk)
     if request.method == 'POST':
         form = ArticleForm(request.POST, instance = get_article)
         if form.is_valid():
             form.save()
 
-
     template = 'edit_page.html'
     
     context = {
-
         'get_material': get_article,
         'update':True,
         'form': ArticleForm(instance = get_article),
-        
     }
     return render(request, template, context)
 
 def delete_page(request, pk):
     get_article = Material.objects.get(pk=pk)
     get_article.delete()
-    return redirect(reverse('edit_page'))   
+    return redirect(reverse('edit_page'))
