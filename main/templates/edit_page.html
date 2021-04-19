@@ -48,7 +48,7 @@
             <th scope="col">id</th>
             <th scope="col">Дата создание</th>
             <th scope="col">Название</th>
-            <th scope="col">Редакторование</th>
+            <th scope="col">Редактирование</th>
             <th scope="col">Удаление</th>
           </tr>
         </thead>
@@ -58,7 +58,7 @@
             <th>{{el.id}}</th>
             <td>{{el.create_date}}</td>
             <td>{{el.name}}</td>
-            <td><a href="{% url 'update_page' el.id %}">Редакторование</a></td>
+            <td><a href="{% url 'update_page' el.id %}">Редактирование</a></td>
             <td><a href="{% url 'delete_page' el.id %}">Удаление</a></td>
             
           </tr>
