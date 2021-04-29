@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Material
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import ArticleForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib import messages
 
 
 class HomeListView(ListView):
@@ -16,37 +17,38 @@ class HomeDetailView(DetailView):
     context_object_name = 'get_material'
 
 
-def edit_page(request):
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            form.save()
-    
-    template = 'edit_page.html'
-    context = {
-        'list_material': Material.objects.all(),
-        'form': ArticleForm(),
-    }
+class CustomSuccessMessageMixin:
+    @property
+    def success_msg(self):
+        return False
+        
+    def form_valid(self,form):
+        messages.success(self.request, self.success_msg)
+        return super().form_valid(form)
 
-    return render(request, template, context)
 
-def update_page(request,pk):
-    get_article = Material.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = ArticleForm(request.POST, instance = get_article)
-        if form.is_valid():
-            form.save()
 
-    template = 'edit_page.html'
-    
-    context = {
-        'get_material': get_article,
-        'update':True,
-        'form': ArticleForm(instance = get_article),
-    }
-    return render(request, template, context)
+class ArticleCreateView(CustomSuccessMessageMixin, CreateView):
+    model = Material
+    template_name = 'edit_page.html'
+    form_class = ArticleForm
+    success_url = reverse_lazy('edit_page')
+    success_msg = 'Запись создана'
+    def get_context_data(self,**kwargs):
+       kwargs['list_material'] = Material.objects.all().order_by('-id')
+       return super().get_context_data(**kwargs)
 
-def delete_page(request, pk):
-    get_article = Material.objects.get(pk=pk)
-    get_article.delete()
-    return redirect(reverse('edit_page'))
+
+class ArticleUpdateView(UpdateView):
+    model = Material
+    template_name = 'edit_page.html'
+    form_class = ArticleForm
+    success_url = reverse_lazy('edit_page')
+    def get_context_data(self,**kwargs):
+        kwargs['update'] = True
+        return super().get_context_data(**kwargs)
+
+class ArticleDeleteView(DeleteView):
+    model = Material
+    template_name = 'edit_page.html'
+    success_url = reverse_lazy('edit_page')

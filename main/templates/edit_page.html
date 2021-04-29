@@ -6,6 +6,8 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
   добавить
 </button>
+    
+
     {% if update %}
     <p>Страница редактирования</p>
     <p><a href="{% url 'edit_page' %}"> Вернутся назад</a></p>
@@ -59,7 +61,19 @@
             <td>{{el.create_date}}</td>
             <td>{{el.name}}</td>
             <td><a href="{% url 'update_page' el.id %}">Редактирование</a></td>
-            <td><a href="{% url 'delete_page' el.id %}">Удаление</a></td>
+            <td>
+                <form id="delete_form" action="{% url 'delete_page' el.id %}" method="post">{% csrf_token %}</form>
+                <a href="javascript:void()" onclick="delete_question()">удалить</a>
+                <script>
+                    function delete_question() {
+                        if (confirm("Вы уверены")) {
+                            document.getElementById('delete_form').submit()
+                        }
+                    
+                    }
+                
+                  </script>
+              </td>
             
           </tr>
           {% endfor %}
@@ -68,5 +82,4 @@
 
 {% endblock %}
 
-  
   
