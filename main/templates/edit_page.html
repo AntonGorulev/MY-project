@@ -59,16 +59,16 @@
             {% for el in list_material %}
           <tr>
             <th>{{el.id}}</th>
-            <td>{{el.create_date}}</td>
+            <td>{{el.create_date}} - {{ el.author}}</td>
             <td>{{el.name}}</td>
             <td><a href="{% url 'update_page' el.id %}">Редактирование</a></td>
             <td>
-                <form id="delete_form" action="{% url 'delete_page' el.id %}" method="post">{% csrf_token %}</form>
-                <a href="javascript:void()" onclick="delete_question()">удалить</a>
+                <form id="delete_form{{el.id}}" action="{% url 'delete_page' el.id %}" method="post">{% csrf_token %}</form>
+                <a href="javascript:void()" onclick="delete_question{{el.id}}()">удалить</a>
                 <script>
                     function delete_question() {
                         if (confirm("Вы уверены")) {
-                            document.getElementById('delete_form').submit()
+                            document.getElementById('delete_form{{el.id}}').submit()
                         }
                     
                     }

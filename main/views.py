@@ -7,6 +7,9 @@ from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+
 
 class HomeListView(ListView):
     model = Material
@@ -30,7 +33,7 @@ class CustomSuccessMessageMixin:
 
 
 
-class ArticleCreateView(CustomSuccessMessageMixin, CreateView):
+class ArticleCreateView(LoginRequiredMixin, CustomSuccessMessageMixin, CreateView):
     model = Material
     template_name = 'edit_page.html'
     form_class = ArticleForm
@@ -39,9 +42,13 @@ class ArticleCreateView(CustomSuccessMessageMixin, CreateView):
     def get_context_data(self,**kwargs):
        kwargs['list_material'] = Material.objects.all().order_by('-id')
        return super().get_context_data(**kwargs)
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
-
-class ArticleUpdateView(UpdateView):
+class ArticleUpdateView(LoginRequiredMixin, CustomSuccessMessageMixin, UpdateView):
     model = Material
     template_name = 'edit_page.html'
     form_class = ArticleForm
@@ -49,6 +56,11 @@ class ArticleUpdateView(UpdateView):
     def get_context_data(self,**kwargs):
         kwargs['update'] = True
         return super().get_context_data(**kwargs)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.user != kwargs['instance'].author:
+            return self.handle_no_permission()
+        return kwargs
 
 class MyprojectLoginView(LoginView):
     template_name = 'login.html'
@@ -74,7 +86,7 @@ class RegisterUserView(CreateView):
 class MyProjectLogout(LogoutView):
     next_page = reverse_lazy('edit_page')
 
-class ArticleDeleteView(DeleteView):
+class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     model = Material
     template_name = 'edit_page.html'
     success_url = reverse_lazy('edit_page')
@@ -83,4 +95,10 @@ class ArticleDeleteView(DeleteView):
     def post(self,request,*args,**kwargs):
         messages.success(self.request, self.success_msg)
         return super().post(request)
-    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user != self.object.author:
+            return self.handle_no_permission()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
