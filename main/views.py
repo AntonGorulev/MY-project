@@ -34,6 +34,7 @@ class CustomSuccessMessageMixin:
 
 
 class ArticleCreateView(LoginRequiredMixin, CustomSuccessMessageMixin, CreateView):
+    login_url = reverse_lazy('login_page')
     model = Material
     template_name = 'edit_page.html'
     form_class = ArticleForm
