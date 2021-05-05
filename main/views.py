@@ -33,11 +33,11 @@ class CustomSuccessMessageMixin:
 
 
 class ArticleCreateView(LoginRequiredMixin, CustomSuccessMessageMixin, CreateView):
-    login_url = reverse_lazy('login_page')
+    login_url = reverse_lazy('main:login_page')
     model = Material
     template_name = 'edit_page.html'
     form_class = ArticleForm
-    success_url = reverse_lazy('edit_page')
+    success_url = reverse_lazy('main:edit_page')
     success_msg = 'Запись создана'
 
     def get_context_data(self, **kwargs):
@@ -55,7 +55,7 @@ class ArticleUpdateView(LoginRequiredMixin, CustomSuccessMessageMixin, UpdateVie
     model = Material
     template_name = 'edit_page.html'
     form_class = ArticleForm
-    success_url = reverse_lazy('edit_page')
+    success_url = reverse_lazy('main:edit_page')
 
     def get_context_data(self, **kwargs):
         kwargs['update'] = True
@@ -71,7 +71,7 @@ class ArticleUpdateView(LoginRequiredMixin, CustomSuccessMessageMixin, UpdateVie
 class MyprojectLoginView(LoginView):
     template_name = 'login.html'
     form_class = AuthUserForm
-    success_url = reverse_lazy('edit_page')
+    success_url = reverse_lazy('main:edit_page')
 
     def get_success_url(self):
         return self.success_url
@@ -81,7 +81,7 @@ class RegisterUserView(CreateView):
     model = User
     template_name = 'register_page.html'
     form_class = RegisterUserForm
-    success_url = reverse_lazy('edit_page')
+    success_url = reverse_lazy('main:edit_page')
     success_msg = 'Пользователь успешно создан'
 
     def form_valid(self, form):
@@ -94,13 +94,13 @@ class RegisterUserView(CreateView):
 
 
 class MyProjectLogout(LogoutView):
-    next_page = reverse_lazy('edit_page')
+    next_page = reverse_lazy('main:edit_page')
 
 
 class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     model = Material
     template_name = 'edit_page.html'
-    success_url = reverse_lazy('edit_page')
+    success_url = reverse_lazy('main:edit_page')
     success_msg = 'Запись удалена'
 
     def post(self, request, *args, **kwargs):
