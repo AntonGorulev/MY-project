@@ -117,7 +117,6 @@ class RegisterUserView(CreateView):
 
 class MyProjectLogout(LogoutView):
     next_page = reverse_lazy('main:edit_page')
-    template_name = '.html'
 
 
 class ArticleDeleteView(LoginRequiredMixin, DeleteView):
