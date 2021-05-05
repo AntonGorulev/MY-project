@@ -1,6 +1,8 @@
+from django.shortcuts import render, redirect, HttpResponse
 from .models import Material
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import ArticleForm, AuthUserForm, RegisterUserForm
+from django.views.generic.edit import FormMixin
+from .forms import ArticleForm, AuthUserForm, RegisterUserForm, CommentForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
@@ -16,12 +18,6 @@ class HomeListView(ListView):
     context_object_name = 'list_material'
 
 
-class HomeDetailView(DetailView):
-    model = Material
-    template_name = 'detail.html'
-    context_object_name = 'get_material'
-
-
 class CustomSuccessMessageMixin:
     @property
     def success_msg(self):
@@ -29,6 +25,32 @@ class CustomSuccessMessageMixin:
  
     def form_valid(self, form):
         messages.success(self.request, self.success_msg)
+        return super().form_valid(form)
+
+
+class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
+    model = Material
+    template_name = 'detail.html'
+    context_object_name = 'get_material'
+    form_class = CommentForm
+    success_msg = 'Комментарий успешно создан, ожидайте модерации'
+    
+    
+    def get_success_url(self):
+        return reverse_lazy( 'main:detail_page', kwargs={'pk':self.get_object().id})
+    
+    def post(self,request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+    
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        self.object.article = self.get_object()
+        self.object.author = self.request.user
+        self.object.save()
         return super().form_valid(form)
 
 
@@ -95,6 +117,7 @@ class RegisterUserView(CreateView):
 
 class MyProjectLogout(LogoutView):
     next_page = reverse_lazy('main:edit_page')
+    template_name = '.html'
 
 
 class ArticleDeleteView(LoginRequiredMixin, DeleteView):
