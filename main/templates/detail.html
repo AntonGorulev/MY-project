@@ -10,13 +10,7 @@
     <p>Текст: {{get_material.text}}</p>
     
     
-    <p>Комментарии ({{get_material.comments_articles.all.count}})</p>
-    
-    
-    <hr>
-    
-    <p>Добавить комментарий</p>
-    
+
     
         {% if messages %}
     <div class="alert alert-success">
@@ -31,11 +25,11 @@
     <!-- {{get_material.comments_articles.all}} -->
     {% if request.user.is_authenticated %}   
     {% for item in get_material.comments_articles.all %}
+    <p>Комментарии ({{get_material.comments_articles.all.count}})</p>
     <li>
+    Коментарий: {{item.text}} <br>
     Дата создания: {{item.create_date}} <br>
-    Автор статьи: {{item.author}} <br><br>
-    {{item.text}}
-
+    Автор комментария: {{item.author}} <br>
     </li>
     {% endfor %}
     </ul>   

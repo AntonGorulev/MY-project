@@ -35,7 +35,7 @@ class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
     template_name = 'detail.html'
     context_object_name = 'get_material'
     form_class = CommentForm
-    success_msg = 'Комментарий успешно создан, ожидайте модерации'
+    success_msg = 'Комментарий успешно создан'
     
     
     def get_success_url(self):
