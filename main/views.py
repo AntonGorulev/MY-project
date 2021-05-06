@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+
 
 
 class HomeListView(ListView):
@@ -105,7 +107,7 @@ class RegisterUserView(CreateView):
     form_class = RegisterUserForm
     success_url = reverse_lazy('main:edit_page')
     success_msg = 'Пользователь успешно создан'
-
+    
     def form_valid(self, form):
         form_valid = super().form_valid(form)
         username = form.cleaned_data["username"]
@@ -136,3 +138,8 @@ class ArticleDeleteView(LoginRequiredMixin, DeleteView):
         success_url = self.get_success_url()
         self.object.delete()
         return HttpResponseRedirect(success_url)
+
+@login_required
+def view_profile(request):
+    return render(request, 'profile.html', {'user': request.user})
+
