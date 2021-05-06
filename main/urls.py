@@ -18,8 +18,10 @@ urlpatterns = [
     path('login', views.MyprojectLoginView.as_view(), name='login_page'),
     path('register', views.RegisterUserView.as_view(), name='register_page'),
     path('logout', views.MyProjectLogout.as_view(), name='logout_page'),
+    path('password_reset', auth_views.PasswordResetDoneView.as_view(),
+         name='password_reset'),
     
-    path('password_reset', MyHack.as_view(), name='password_reset'),
+    # path('password_reset', MyHack.as_view(), name='password_reset'),
 
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(),
          name='password_reset_done'),

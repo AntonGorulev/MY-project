@@ -29,7 +29,7 @@
     {% endif %}
     <ul>
     <!-- {{get_material.comments_articles.all}} -->
-
+    {% if request.user.is_authenticated %}   
     {% for item in get_material.comments_articles.all %}
     <li>
     Дата создания: {{item.create_date}} <br>
@@ -51,7 +51,7 @@
 
         <button form="add_form" type="submit" class="btn btn-primary">Добавить</button>
 
-        
+    {% endif %}   
         
         
 

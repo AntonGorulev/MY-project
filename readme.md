@@ -13,3 +13,4 @@ $ python manage.py runserver
 #### Job description: unregistered user can only read articles
 #### after registration, the user gets access to posting articles
 #### posted articles can only be edited by the author
+### authorization is required to read and write comments
