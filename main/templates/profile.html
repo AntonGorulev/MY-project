@@ -2,7 +2,7 @@
 {% block title %} Личный профиль {% endblock %}
 {% block content %}
 
-    <a href="{% url "main:profile" %}"> Редактировать </a>
+    <a href="{% url "main:edit_profile" %}"> Редактировать </a>
     <p>name: {{ request.user }}</p>
     <p>Birthday: {{ user.profile.birth }}</p>
     <p><img src = "{{ user.profile.photo.url }}" alt="alternate"></p>

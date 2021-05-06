@@ -28,11 +28,11 @@
         <li class="nav-item">          
           <a class="nav-link {% if url_edit_page == request.path %}active{% endif %}" href="{{ url_edit_page }}">Создание/ред/удал</a>
         </li>
-        <li class="nav-item"> 
-          <a class="nav-link btn-danger ml-5" href="{{ url_logout_page }}">Выйти</a>
-        </li>
         <li class="nav-item">
           <a class="nav-link"<a href="{% url "main:profile" %}">Profile</a>
+        </li>
+        <li class="nav-item"> 
+          <a class="nav-link btn-danger ml-5" href="{{ url_logout_page }}">Выйти</a>
         </li>
         {% else %}
         <li class="nav-item">     

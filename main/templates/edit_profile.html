@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% block title %} Edit profile {% endblock %}
+
+{% block content %}
+
+    <h1>Вы можете отредактировать свой профиль:</h1>
+    <!-- <a href="{% url "main:edit_profile" %}"> Редактировать </a> -->
+
+    <form action="." method="post" enctype="multipart/form-data">
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Update">
+    </form>
+
+{% endblock %}

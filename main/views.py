@@ -12,6 +12,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
+from . import forms
+
+
 
 
 class HomeListView(ListView):
@@ -142,4 +145,23 @@ class ArticleDeleteView(LoginRequiredMixin, DeleteView):
 @login_required
 def view_profile(request):
     return render(request, 'profile.html', {'user': request.user})
+
+def edit_profile(request):
+    if request.method == "POST":
+        user_form = forms.UserEditForm(data=request.POST,
+                                       instance=request.user)
+        profile_form = forms.ProfileEditForm(data=request.POST,
+                                             instance=request.user.profile,
+                                             files=request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            if not profile_form.cleaned_data['photo']:
+                profile_form.cleaned_data['photo'] = request.user.profile.photo
+            profile_form.save()
+            return render(request, 'profile.html', {'user': request.user})
+    else:
+        user_form = forms.UserEditForm(instance=request.user)
+        profile_form = forms.ProfileEditForm(instance=request.user.profile)
+    return render(request, 'edit_profile.html', {'user_form': user_form,
+                                                 'profile_form': profile_form})
 

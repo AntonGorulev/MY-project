@@ -3,7 +3,7 @@ from django.forms import Textarea
 from .models import Material, Comments
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-
+from . import models
 
 class ArticleForm(forms.ModelForm):
 
@@ -57,3 +57,14 @@ class CommentForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['text'].widget = Textarea(attrs={'rows':5})
+
+class UserEditForm(forms.ModelForm):  # форма для редактирования
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'email')
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = models.Profile
+        fields = ('birth', 'photo')
