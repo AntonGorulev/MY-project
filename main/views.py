@@ -15,8 +15,6 @@ from django.contrib.auth.decorators import login_required
 from . import forms
 
 
-
-
 class HomeListView(ListView):
     model = Material
     template_name = 'index.html'
@@ -39,7 +37,6 @@ class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
     context_object_name = 'get_material'
     form_class = CommentForm
     success_msg = 'Комментарий успешно создан'
-    
     
     def get_success_url(self):
         return reverse_lazy( 'main:detail_page', kwargs={'pk':self.get_object().id})
@@ -164,4 +161,3 @@ def edit_profile(request):
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
     return render(request, 'edit_profile.html', {'user_form': user_form,
                                                  'profile_form': profile_form})
-
