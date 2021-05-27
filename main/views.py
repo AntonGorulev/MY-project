@@ -5,7 +5,7 @@ from django.views.generic.edit import FormMixin
 from .forms import ArticleForm, AuthUserForm, RegisterUserForm, CommentForm
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView,  PasswordResetDoneView, PasswordResetView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -161,3 +161,12 @@ def edit_profile(request):
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
     return render(request, 'edit_profile.html', {'user_form': user_form,
                                                  'profile_form': profile_form})
+
+class CustomPasswordResetView(PasswordResetView):
+    success_url = reverse_lazy('main:password_reset_done')
+    email_template_name = 'password_reset_email.html'
+    # subject_template_name = 'password_reset_subject.txt'
+    template_name = 'password_reset_form.html'
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_reset_done.html' 
